@@ -2,40 +2,49 @@ package org.doit.restbootcamplearning.service;
 
 import org.doit.restbootcamplearning.dao.EmployeeDAO;
 import org.doit.restbootcamplearning.model.Employee;
+import org.doit.restbootcamplearning.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class EmployeeService {
 
-    private EmployeeDAO employeeDAO;
+    private EmployeeRepository employeeRepository;
     @Autowired
-    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
+
 
 
     public List<Employee> getList(){
-        return employeeDAO.getList();
+        return employeeRepository.findAll();
     }
 
     public Employee getById(int id){
-        return employeeDAO.getById(id);
+        Optional<Employee> result = employeeRepository.findById(id);
+
+        Employee employee = null;
+
+        if(result.isPresent()){
+            employee = result.get();
+        }else {
+            throw new RuntimeException("Employee id not found - " + id);
+        }
+
+        return employee;
     }
 
-    public void add(Employee employee){
-        employeeDAO.add(employee);
-    }
-
-    public Employee update(Employee employee){
-        return employeeDAO.update(employee);
+    public Employee save(Employee employee){
+        return employeeRepository.save(employee);
     }
 
     public void deleteById(int id){
-        employeeDAO.deleteById(id);
+        employeeRepository.deleteById(id);
     }
 }

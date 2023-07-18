@@ -34,12 +34,12 @@ public class RestEmployeeController {
 
     @PostMapping("/employees")
     public void addEmployee(@RequestBody Employee employee){
-        employeeService.add(employee);
+        employeeService.save(employee);
     }
 
     @PutMapping("/employees")
     public Employee updateEmployee(@RequestBody Employee employee){
-        return employeeService.update(employee);
+        return employeeService.save(employee);
     }
 
     @DeleteMapping("/employees/{employeeid}")
